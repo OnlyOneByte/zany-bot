@@ -1,5 +1,5 @@
 import sqlite3
-from discord import User, Reaction, Message
+from discord import User
 
 def get_deleted_message(conn, reaction_id):
     sql = '''SELECT * FROM deleted_messages WHERE react_message_id=?'''
@@ -26,13 +26,13 @@ def check_user_unlocks(conn, user: User, economyOptions):
     # Tries to take a zany coin away, if possible. If successful, return true, else false.
     # if user does not exist, it will create the user and continue.
     global CONFIG_OPTIONS
-    userRow = conn.execute("SELECT * FROM users WHERE user_id=?", (user.id,)).fetchone()
+    userRow = conn.execute("SELECT banked_zanycoins FROM users WHERE user_id=?", (user.id,)).fetchone()
     if userRow == None:
         # user does not exist, will create user and give him default number of items
         add_user(conn, (user.id, user.name, economyOptions['starting_amount']-1))
         return True
-    if userRow[2] > 0:
-        conn.execute("UPDATE users SET banked_zanycoins=? WHERE user_id=?", (userRow[2]-1, user.id))
+    if int(userRow[0]) > 0:
+        conn.execute("UPDATE users SET banked_zanycoins=? WHERE user_id=?", (int(userRow[0])-1, user.id))
         return True
     return False
     
