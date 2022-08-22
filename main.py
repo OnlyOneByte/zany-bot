@@ -6,9 +6,6 @@ from events import EventHandler
 from commands import CommandHandler
 from db import create_connection
 
-
-
-
 async def coin_interval(client, conn, economyOptions, zany_channel):
     await client.wait_until_ready()
     print("Starting up background task of items")
@@ -20,8 +17,6 @@ async def coin_interval(client, conn, economyOptions, zany_channel):
         conn.execute("UPDATE users SET banked_zanycoins=banked_zanycoins+?", (economyOptions['per_interval_gain'],))
         conn.execute("UPDATE users SET banked_zanycoins=? WHERE banked_zanycoins>?", (economyOptions['max_bank'], economyOptions['max_bank']))
         await asyncio.sleep(economyOptions['earn_interval']*60) # task runs every 60 seconds
-
-
 
 
 def main():
