@@ -29,7 +29,7 @@ def check_user_unlocks(conn, user: User, economyOptions):
     userRow = conn.execute("SELECT banked_zanycoins FROM users WHERE user_id=?", (user.id,)).fetchone()
     if userRow == None:
         # user does not exist, will create user and give him default number of items
-        add_user(conn, (user.id, user.name, economyOptions['starting_amount']-1))
+        add_user(conn, (user.id, user.name, int(economyOptions['starting_amount'])-1))
         return True
     if int(userRow[0]) > 0:
         conn.execute("UPDATE users SET banked_zanycoins=? WHERE user_id=?", (int(userRow[0])-1, user.id))

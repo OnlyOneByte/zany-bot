@@ -17,5 +17,5 @@ class CommandHandler(commands.Cog):
         if balance:
             await ctx.channel.send("You have " + str(balance[0]) + " zany coins remaining!")
         else:
-            add_user(self.db_con, (ctx.author.id,ctx.author.name,self.config['economy']['starting_amount']))
+            add_user(self.db_con, (ctx.author.id,ctx.author.name,int(self.config['economy']['starting_amount'])))
             await ctx.channel.send("You have " + str(self.config['economy']['starting_amount']) + " zany coins remaining!")
