@@ -1,3 +1,6 @@
 zany_sqlite.db
 attachments/
-zany_config.yaml
+*.yaml
+_pycache_/
+__pycache__/db.cpython-36.pyc
+
