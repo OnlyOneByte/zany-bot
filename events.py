@@ -68,7 +68,7 @@ class EventHandler(commands.Cog):
         # Do economy if we want it
         if self.config['economy_enable']:
             if not check_user_unlocks(self.db_con, user, self.config['economy']):
-                await user.send("You are out of zany_coins! Please wait!")
+                await user.send(f"You are out of {self.config['economy']['currency_name']}s! Please wait!")
                 return
 
         # The magic that happens, showing the user the deleted message

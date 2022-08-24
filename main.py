@@ -14,7 +14,7 @@ async def coin_interval(client, conn, economyOptions, zany_channel):
     # main background loop
     while True:
         await asyncio.sleep(economyOptions['earn_interval']*60)
-        await zany_chan.send("Everyone is getting paid! You have new zany coins!")
+        await zany_chan.send(f"Everyone is getting paid! You have new {economyOptions['currency_name']}s!")
         conn.execute("UPDATE users SET banked_zanycoins=banked_zanycoins+?", (economyOptions['per_interval_gain'],))
         conn.execute("UPDATE users SET banked_zanycoins=? WHERE banked_zanycoins>?", (economyOptions['max_bank'], economyOptions['max_bank']))
         

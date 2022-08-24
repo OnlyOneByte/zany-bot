@@ -21,7 +21,7 @@ class CommandHandler(commands.Cog):
         if not balance:
             add_user(self.db_con, (user_id,user_name,int(self.config['economy']['starting_amount']), 0))
             balance = [self.config['economy']['starting_amount']]
-        await ctx.channel.send(f"<@{user_id}> has {balance[0]} zany coins remaining!")
+        await ctx.channel.send(f"<@{user_id}> has {balance[0]} {self.config['economy']['currency_name']}s remaining!")
 
     @commands.command(aliases=['r'])
     async def rob(self, ctx: commands.Context, user: discord.User=None):
@@ -61,5 +61,5 @@ class CommandHandler(commands.Cog):
         self.db_con.execute("UPDATE users SET banked_zanycoins=?, robs_used=robs_used+1 WHERE user_id=?", (new_bal, ctx.author.id))
         self.db_con.execute("UPDATE users SET banked_zanycoins=banked_zanycoins-? WHERE user_id=?" , (rob_amount, user.id))
 
-        await ctx.channel.send(f"<@{ctx.author.id}> has robbed <@{user.id}> for {rob_amount}. You now have {new_bal} zany coins! 😈")
+        await ctx.channel.send(f"<@{ctx.author.id}> has robbed <@{user.id}> for {rob_amount}. You now have {new_bal} {self.config['economy']['currency_name']}s! 😈")
     
