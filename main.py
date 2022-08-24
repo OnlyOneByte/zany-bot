@@ -8,15 +8,29 @@ from db import create_connection
 
 async def coin_interval(client, conn, economyOptions, zany_channel):
     await client.wait_until_ready()
-    print("Starting up background task of items")
+    print("Starting up background task: Economy passive earn")
     zany_chan = await client.fetch_channel(zany_channel)
 
     # main background loop
     while True:
+        await asyncio.sleep(economyOptions['earn_interval']*60)
         await zany_chan.send("Everyone is getting paid! You have new zany coins!")
         conn.execute("UPDATE users SET banked_zanycoins=banked_zanycoins+?", (economyOptions['per_interval_gain'],))
         conn.execute("UPDATE users SET banked_zanycoins=? WHERE banked_zanycoins>?", (economyOptions['max_bank'], economyOptions['max_bank']))
-        await asyncio.sleep(economyOptions['earn_interval']*60) # task runs every 60 seconds
+        
+
+async def rob_interval(client, conn, economyOptions, zany_channel):
+    await client.wait_until_ready()
+    print("Starting up background task: rob timer")
+    zany_chan = await client.fetch_channel(zany_channel)
+
+    # main background loop
+    while True:
+        await asyncio.sleep(economyOptions['rob_interval']*60)
+        await zany_chan.send("LET THE HUNT BEGIN! ROBS RESET!")
+        conn.execute("UPDATE users SET robs_used=0")
+        
+
 
 
 def main():
@@ -33,10 +47,12 @@ def main():
     # register background tasks
     if config_options['economy_enable']:
         client.loop.create_task(coin_interval(client, db_connection, config_options['economy'], config_options['zany_channel']))
+    if config_options['economy']['rob_enabled']:
+        client.loop.create_task(rob_interval(client, db_connection, config_options['economy'], config_options['zany_channel']))
+    
     
     client.add_cog(EventHandler(client, db_connection, config_options)) # Registers event handlers
     client.add_cog(CommandHandler(client, db_connection, config_options)) # Registers command handlers
-
     client.run(config_options['token'])
 
 if __name__ == "__main__":

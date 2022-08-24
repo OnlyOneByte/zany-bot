@@ -15,8 +15,8 @@ def add_deleted(conn, task):
     return
 
 def add_user(conn, task):
-    sql = '''INSERT INTO users(user_id,user_name,banked_zanycoins)
-              VALUES(?,?,?)'''
+    sql = '''INSERT INTO users(user_id,user_name,banked_zanycoins,robs_used)
+              VALUES(?,?,?,?)'''
     cur = conn.cursor()
     cur.execute(sql, task)
     conn.commit()
@@ -29,7 +29,7 @@ def check_user_unlocks(conn, user: User, economyOptions):
     userRow = conn.execute("SELECT banked_zanycoins FROM users WHERE user_id=?", (user.id,)).fetchone()
     if userRow == None:
         # user does not exist, will create user and give him default number of items
-        add_user(conn, (user.id, user.name, int(economyOptions['starting_amount'])-1))
+        add_user(conn, (user.id, user.name, int(economyOptions['starting_amount'])-1), 0)
         return True
     if int(userRow[0]) > 0:
         conn.execute("UPDATE users SET banked_zanycoins=? WHERE user_id=?", (int(userRow[0])-1, user.id))
@@ -49,7 +49,7 @@ def create_connection(path):
         connection.execute("CREATE TABLE deleted_messages(time,react_message_id,guild_id,channel_id,user_name,user_id,text,attachment_files)")
 
     if connection.execute("SELECT name FROM sqlite_master WHERE name='users'").fetchone() is None:
-        connection.execute("CREATE TABLE users(user_id,user_name,banked_zanycoins)")
+        connection.execute("CREATE TABLE users(user_id,user_name,banked_zanycoins,robs_used)")
     
     return connection
 
