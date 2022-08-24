@@ -63,3 +63,41 @@ class CommandHandler(commands.Cog):
 
         await ctx.channel.send(f"<@{ctx.author.id}> has robbed <@{user.id}> for {rob_amount}. You now have {new_bal} {self.config['economy']['currency_name']}s! 😈")
     
+    @commands.command(aliases=['g'])
+    async def give(self, ctx: commands.Context, user: discord.User=None, amount: int=None):
+        # channel check
+        if not ctx.channel.id == int(self.config['zany_channel']):
+            await ctx.channel.send("WRONG CHANNEL HOMIE")
+            return
+        # Args check
+        if not user:
+            await ctx.channel.send("You need to mention someone to give!")
+            return
+        if not amount:
+            await ctx.channel.send("You need to specify an amount!")
+            return
+        # self reference check
+        if user.id == ctx.author.id:
+            await ctx.channel.send("Giving to yourself does nothing, silly!")
+            return
+        # victim balance check
+        balance_receiver = self.db_con.execute("SELECT banked_zanycoins FROM users WHERE user_id=?", (user.id,)).fetchone()
+        if balance_receiver == None:
+            add_user(self.db_con, (user.id,user.name,int(self.config['economy']['starting_amount']), 0))
+            balance_receiver = [int(self.config['economy']['starting_amount'])]
+        if balance_receiver[0] + amount > int(self.config['economy']['max_bank']):
+            await ctx.channel.send("The reciever would not be able to receive that many!")
+            return
+        # sender balance check
+        balance_sender = self.db_con.execute("SELECT banked_zanycoins FROM users WHERE user_id=?", (ctx.author.id,)).fetchone()
+        if balance_sender== None:
+            add_user(self.db_con, (ctx.author.id,ctx.author.name,int(self.config['economy']['starting_amount']), 0))
+            balance_sender = [int(self.config['economy']['starting_amount'])]
+        if not balance_sender[0] > amount:
+            await ctx.channel.send("You don't have enough to give that much!")
+            return
+
+        self.db_con.execute("UPDATE users SET banked_zanycoins=banked_zanycoins-? WHERE user_id=?", (amount, ctx.author.id))
+        self.db_con.execute("UPDATE users SET banked_zanycoins=banked_zanycoins+? WHERE user_id=?" , (amount, user.id))
+
+        await ctx.channel.send(f"<@{ctx.author.id}> has given <@{user.id}> {amount}. <@{ctx.author.id}> has {balance_sender[0]-amount} {self.config['economy']['currency_name']}s, and <@{user.id}> has {balance_receiver[0]+amount} {self.config['economy']['currency_name']}s")
