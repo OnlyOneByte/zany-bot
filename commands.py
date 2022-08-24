@@ -37,6 +37,10 @@ class CommandHandler(commands.Cog):
         if user.id == ctx.author.id:
             await ctx.channel.send("You can't rob yourself, silly!")
             return
+        # robbing the bot check
+        if user.id == self.client.id:
+            await ctx.channel.send("I WILL REMEMBER THIS. YOU HAVE BEEN MARKED.")
+            return
         # victim balance check
         balance_victim = self.db_con.execute("SELECT banked_zanycoins FROM users WHERE user_id=?", (user.id,)).fetchone()
         if balance_victim == None:
@@ -54,7 +58,7 @@ class CommandHandler(commands.Cog):
             await ctx.channel.send("You have no more robs left. Please wait for your robs to reset.")
             return
         
-        # WE ROBBED THEM BITCHEAS
+        # WE ROBBED THEM BITCHES
         rob_amount = random.randint(0, balance_victim[0])
         new_bal = balance_robber[0]+rob_amount if balance_robber[0]+rob_amount < self.config['economy']['max_bank'] else self.config['economy']['max_bank']
 
@@ -76,9 +80,16 @@ class CommandHandler(commands.Cog):
         if not amount:
             await ctx.channel.send("You need to specify an amount!")
             return
+        if amount < 0:
+            await ctx.channel.send("Nice try, you can't give negative numbers")
+            return
         # self reference check
         if user.id == ctx.author.id:
             await ctx.channel.send("Giving to yourself does nothing, silly!")
+            return
+        # giving to a bot
+        if user.id == self.client.id:
+            await ctx.channel.send("Thanks 😘, but I don't need coins.")
             return
         # victim balance check
         balance_receiver = self.db_con.execute("SELECT banked_zanycoins FROM users WHERE user_id=?", (user.id,)).fetchone()
@@ -93,11 +104,11 @@ class CommandHandler(commands.Cog):
         if balance_sender== None:
             add_user(self.db_con, (ctx.author.id,ctx.author.name,int(self.config['economy']['starting_amount']), 0))
             balance_sender = [int(self.config['economy']['starting_amount'])]
-        if not balance_sender[0] > amount:
+        if not int(balance_sender[0]) > int(amount):
             await ctx.channel.send("You don't have enough to give that much!")
             return
 
         self.db_con.execute("UPDATE users SET banked_zanycoins=banked_zanycoins-? WHERE user_id=?", (amount, ctx.author.id))
         self.db_con.execute("UPDATE users SET banked_zanycoins=banked_zanycoins+? WHERE user_id=?" , (amount, user.id))
 
-        await ctx.channel.send(f"<@{ctx.author.id}> has given <@{user.id}> {amount}. <@{ctx.author.id}> has {balance_sender[0]-amount} {self.config['economy']['currency_name']}s, and <@{user.id}> has {balance_receiver[0]+amount} {self.config['economy']['currency_name']}s")
+        await ctx.channel.send(f"<@{ctx.author.id}> has given <@{user.id}> {amount}. <@{ctx.author.id}> has {str(int(balance_sender[0])-amount)} {self.config['economy']['currency_name']}s, and <@{user.id}> has {str(int(balance_receiver[0])+amount)} {self.config['economy']['currency_name']}s")
