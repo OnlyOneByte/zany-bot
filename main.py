@@ -8,7 +8,7 @@ from db import create_connection
 
 async def coin_interval(client, conn, economyOptions, zany_channel):
     await client.wait_until_ready()
-    print("Starting up background task: Economy passive earn")
+    print("Starting up background task: Economy Earn Interval Tiemr")
     zany_chan = await client.fetch_channel(zany_channel)
 
     # main background loop
@@ -21,7 +21,7 @@ async def coin_interval(client, conn, economyOptions, zany_channel):
 
 async def rob_interval(client, conn, economyOptions, zany_channel):
     await client.wait_until_ready()
-    print("Starting up background task: rob timer")
+    print("Starting up background task: Rob Interval Timer")
     zany_chan = await client.fetch_channel(zany_channel)
 
     # main background loop
