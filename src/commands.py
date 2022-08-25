@@ -1,7 +1,7 @@
 import discord
 import random
 from discord.ext import commands
-from db import add_user
+from .db import add_user
 
 class CommandHandler(commands.Cog):
     def __init__(self, client, db_con, config):

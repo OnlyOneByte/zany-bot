@@ -1,6 +1,10 @@
 
 import yaml
+import os
+import re
 import asyncio
+import discord
+from yaml import SafeLoader
 from discord.ext import commands
 from src.events import EventHandler
 from src.commands import CommandHandler
@@ -31,18 +35,26 @@ async def rob_interval(client, conn, economyOptions, zany_channel):
         conn.execute("UPDATE users SET robs_used=0")
         
 
-
+path_matcher = re.compile(r'\$\{([^}^{]+)\}')
+def path_constructor(loader, node):
+  ''' Extract the matched value, expand env variable, and replace the match '''
+  value = node.value
+  match = path_matcher.match(value)
+  env_var = match.group()[2:-1]
+  return os.environ.get(env_var) + value[match.end():]
 
 def main():
     db_connection = None
     config_options = None
+    yaml.add_implicit_resolver('!path', path_matcher, None, SafeLoader)
+    yaml.add_constructor('!path', path_constructor, SafeLoader)
 
     with open("config.yaml", "r") as yamlfile:
-        data = yaml.load(yamlfile, Loader=yaml.FullLoader)
+        data = yaml.safe_load(yamlfile)
         config_options = data
         db_connection = create_connection(data['sqlite_dir'])
 
-    client = commands.Bot(command_prefix=config_options['command_prefix']) # register command prefix
+    client = commands.Bot(command_prefix=config_options['command_prefix'], intents=discord.Intents.default()) # register command prefix
 
     # register background tasks
     if config_options['economy_enable']:

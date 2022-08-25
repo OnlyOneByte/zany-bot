@@ -5,11 +5,12 @@ name = "pypi"
 
 [packages]
 "discord.py" = "*"
+"pyyaml" = "*"
 
 [dev-packages]
 
 [requires]
-python_version = "3.10"
+python_version = "3.6.9"
 
 [scripts]
-start = "python3 main.py"
+app = "python3 main.py"

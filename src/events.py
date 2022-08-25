@@ -1,8 +1,8 @@
-from datetime import datetime
 import discord
+from datetime import datetime
 from discord import User, Reaction, Message
 from discord.ext import commands
-from db import add_deleted, add_user, check_user_unlocks, create_connection, get_deleted_message
+from .db import add_deleted, add_user, check_user_unlocks, create_connection, get_deleted_message
 
 class EventHandler(commands.Cog):
     def __init__(self, client, db_con, config):
