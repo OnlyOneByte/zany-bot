@@ -45,10 +45,10 @@ def check_user_bank(conn, user: User, cost: int, economyOptions):
     userRow = conn.execute("SELECT banked_zanycoins FROM users WHERE user_id=?", (user.id,)).fetchone()
     if userRow == None:
         # user does not exist, will create user and give him default number of items
-        add_user(conn, (user.id, user.name, int(economyOptions['starting_amount'])), 0)
+        add_user(conn, (user.id, user.name, int(economyOptions['starting_amount']), 0))
     user_coins = int(userRow[0]) if userRow else int(economyOptions['starting_amount'])
     if user_coins >= cost:
-        conn.execute("UPDATE users SET banked_zanycoins=? WHERE user_id=?", (int(userRow[0])-cost, user.id))
+        conn.execute("UPDATE users SET banked_zanycoins=? WHERE user_id=?", (user_coins-cost, user.id))
         conn.commit()
         return True
     return False

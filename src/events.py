@@ -37,8 +37,8 @@ class EventHandler(commands.Cog):
                 message.guild.name,
                 message.channel.id,
                 message.channel.name,
-                message.author.name,
                 message.author.id,
+                message.author.name,
                 message.content,
                 ",".join(attachment_filenames),
                 0,
@@ -75,10 +75,11 @@ class EventHandler(commands.Cog):
                 return
             else:
                 increment_unlock_times(self.db_con, deleted_msg[DM_SCHEMA['react_message_id']],deleted_msg[DM_SCHEMA['user_id']])
-                await reaction.message.edit(f"======\nA Message was deleted in:\n  -{deleted_msg[DM_SCHEMA['guild_name']]}\n  -{deleted_msg[DM_SCHEMA['channel_name']]}\n  -**{deleted_msg[DM_SCHEMA['user_name']]}**\n  -*Cost: {str(deleted_msg[DM_SCHEMA['unlock_times']]+1)}*\nReact to this message to get a DM with the deleted message!")
+                cost = (deleted_msg[DM_SCHEMA['unlock_times']]+1) + 1
+                await reaction.message.edit(content=f"======\nA Message was deleted in:\n  -{deleted_msg[DM_SCHEMA['guild_name']]}\n  -{deleted_msg[DM_SCHEMA['channel_name']]}\n  -**{deleted_msg[DM_SCHEMA['user_name']]}**\n  -*Cost: {cost}*\nReact to this message to get a DM with the deleted message!")
 
         # The magic that happens, showing the user the deleted message
-        await user.send("|==== Message by: " + deleted_msg[4] + " ====|")
+        await user.send("|==== Message by: " + deleted_msg[DM_SCHEMA['user_name']] + " ====|")
         if deleted_msg[DM_SCHEMA['attachments']]:
             msg_files = []
             for filename in deleted_msg[deleted_msg[DM_SCHEMA['attachments']]].split(","):
