@@ -1,7 +1,7 @@
 sqlite_dir: 'zany_sqlite.db'
 token: ${BOT_TOKEN}
 zany_channel: ${ZANY_CHANNEL}
-debug: 2
+debug: 1
 blacklist_user: true   # blacklists user from seeing it
 command_prefix: "<>"
 
@@ -10,11 +10,15 @@ command_prefix: "<>"
 economy_enable: true
 
 economy:
+    # currency and gain option
     currency_name: "Zany Coin"
-    max_bank: 12
-    earn_interval: 60       # time in minutes
-    per_interval_gain: 1    # how many unlocks gained per interval
+    max_bank: 500
+    earn_interval: 720      # time in minutes
+    per_interval_gain: 3    # how many unlocks gained per interval
     starting_amount: 6      # how much do you start with
+
+    # rob settings
     rob_enabled: true       # can players rob
-    rob_interval: 120       # rob interval in minutes
-    robs_per_interval: 1    # how many robs per interval
+    rob_interval: 60        # rob interval in minutes
+    rob_max: 100            # max rob amount
+    robs_per_interval: 4    # how many robs per interval

@@ -28,7 +28,7 @@ class EventHandler(commands.Cog):
                 attachment_filenames.append(filename)
 
             zany_chan = await self.client.fetch_channel(self.config['zany_channel'])
-            reacc_message = await zany_chan.send("======\nA Message was deleted in:\n- " + message.guild.name + "\n- " + message.channel.name + "\n- " + message.author.name + "\nReact to this message to get a DM with the deleted message!")
+            reacc_message = await zany_chan.send(f"======\nA Message was deleted in:\n  -{message.guild.name }\n  -{message.channel.name}\n  -**{message.author.name}**\nReact to this message to get a DM with the deleted message!")
 
             task = (
                 str(datetime.now()),

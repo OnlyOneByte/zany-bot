@@ -59,7 +59,8 @@ class CommandHandler(commands.Cog):
             return
         
         # WE ROBBED THEM BITCHES
-        rob_amount = random.randint(0, balance_victim[0])
+        max_rob = balance_victim[0] if balance_victim[0] < self.config['economy']['max_rob']
+        rob_amount = random.randint(0, max_rob)
         new_bal = balance_robber[0]+rob_amount if balance_robber[0]+rob_amount < self.config['economy']['max_bank'] else self.config['economy']['max_bank']
 
         self.db_con.execute("UPDATE users SET banked_zanycoins=?, robs_used=robs_used+1 WHERE user_id=?", (new_bal, ctx.author.id))
@@ -104,7 +105,7 @@ class CommandHandler(commands.Cog):
         if balance_sender== None:
             add_user(self.db_con, (ctx.author.id,ctx.author.name,int(self.config['economy']['starting_amount']), 0))
             balance_sender = [int(self.config['economy']['starting_amount'])]
-        if not int(balance_sender[0]) > int(amount):
+        if not int(balance_sender[0]) >= int(amount):
             await ctx.channel.send("You don't have enough to give that much!")
             return
 
