@@ -1,14 +1,29 @@
 import sqlite3
 from discord import User
 
+
+DELETED_MSG_COLS = [
+    'time',
+    'react_message_id',
+    'guild_id',
+    'channel_id',
+    'user_name',
+    'user_id',
+    'text',
+    'attachments',
+    'unlock_times'
+    ]
+DELETED_MSG_SCHEMA = {DELETED_MSG_COLS[i] : i for i in range(0, len(DELETED_MSG_COLS))}
+
+
+
 def get_deleted_message(conn, reaction_id):
     sql = '''SELECT * FROM deleted_messages WHERE react_message_id=?'''
     return conn.execute(sql, (reaction_id,)).fetchone()
 
 
 def add_deleted(conn, task):
-    sql = '''INSERT INTO deleted_messages(time,react_message_id,guild_id,channel_id,user_name,user_id,text,attachment_files)
-              VALUES(?,?,?,?,?,?,?,?)'''
+    sql = f'INSERT INTO deleted_messages({",".join(DELETED_MSG_COLS)}) VALUES(?,?,?,?,?,?,?,?,?)'
     cur = conn.cursor()
     cur.execute(sql, task)
     conn.commit()
@@ -22,17 +37,16 @@ def add_user(conn, task):
     conn.commit()
     return
 
-def check_user_unlocks(conn, user: User, economyOptions):
+def check_user_bank(conn, user: User, cost: int, economyOptions):
     # Tries to take a zany coin away, if possible. If successful, return true, else false.
     # if user does not exist, it will create the user and continue.
-    global CONFIG_OPTIONS
     userRow = conn.execute("SELECT banked_zanycoins FROM users WHERE user_id=?", (user.id,)).fetchone()
     if userRow == None:
         # user does not exist, will create user and give him default number of items
-        add_user(conn, (user.id, user.name, int(economyOptions['starting_amount'])-1), 0)
-        return True
-    if int(userRow[0]) > 0:
-        conn.execute("UPDATE users SET banked_zanycoins=? WHERE user_id=?", (int(userRow[0])-1, user.id))
+        add_user(conn, (user.id, user.name, int(economyOptions['starting_amount'])), 0)
+    user_coins = int(userRow[0]) if userRow else int(economyOptions['starting_amount'])
+    if user_coins >= cost:
+        conn.execute("UPDATE users SET banked_zanycoins=? WHERE user_id=?", (int(userRow[0])-cost, user.id))
         return True
     return False
     
@@ -46,7 +60,7 @@ def create_connection(path):
         print(f"The error '{e}' occurred")
 
     if connection.execute("SELECT name FROM sqlite_master WHERE name='deleted_messages'").fetchone() is None:
-        connection.execute("CREATE TABLE deleted_messages(time,react_message_id,guild_id,channel_id,user_name,user_id,text,attachment_files)")
+        connection.execute(f"CREATE TABLE deleted_messages({','.join(DELETED_MSG_COLS)})")
 
     if connection.execute("SELECT name FROM sqlite_master WHERE name='users'").fetchone() is None:
         connection.execute("CREATE TABLE users(user_id,user_name,banked_zanycoins,robs_used)")

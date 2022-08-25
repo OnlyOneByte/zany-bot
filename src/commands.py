@@ -59,7 +59,7 @@ class CommandHandler(commands.Cog):
             return
         
         # WE ROBBED THEM BITCHES
-        max_rob = balance_victim[0] if balance_victim[0] < self.config['economy']['max_rob']
+        max_rob = balance_victim[0] if balance_victim[0] < self.config['economy']['max_rob'] else self.config['economy']['max_rob']
         rob_amount = random.randint(0, max_rob)
         new_bal = balance_robber[0]+rob_amount if balance_robber[0]+rob_amount < self.config['economy']['max_bank'] else self.config['economy']['max_bank']
 

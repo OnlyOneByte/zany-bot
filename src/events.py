@@ -2,7 +2,7 @@ import discord
 from datetime import datetime
 from discord import User, Reaction, Message
 from discord.ext import commands
-from .db import add_deleted, add_user, check_user_unlocks, create_connection, get_deleted_message
+from .db import add_deleted, check_user_bank, get_deleted_message, DELETED_MSG_SCHEMA
 
 class EventHandler(commands.Cog):
     def __init__(self, client, db_con, config):
@@ -38,7 +38,8 @@ class EventHandler(commands.Cog):
                 message.author.name,
                 message.author.id,
                 message.content,
-                ",".join(attachment_filenames)
+                ",".join(attachment_filenames),
+                0,
             )
             
             add_deleted(self.db_con, task)
@@ -67,17 +68,18 @@ class EventHandler(commands.Cog):
 
         # Do economy if we want it
         if self.config['economy_enable']:
-            if not check_user_unlocks(self.db_con, user, self.config['economy']):
-                await user.send(f"You are out of {self.config['economy']['currency_name']}s! Please wait!")
+            if not check_user_bank(self.db_con, user, deleted_msg[DELETED_MSG_SCHEMA['unlock_times']], self.config['economy']):
+                await user.send(f"You do not have enough {self.config['economy']['currency_name']}s! Please wait!")
                 return
+            
 
         # The magic that happens, showing the user the deleted message
         await user.send("|==== Message by: " + deleted_msg[4] + " ====|")
-        if deleted_msg[7]:
+        if deleted_msg[DELETED_MSG_SCHEMA['attachments']]:
             msg_files = []
-            for filename in deleted_msg[7].split(","):
+            for filename in deleted_msg[deleted_msg[DELETED_MSG_SCHEMA['attachments']]].split(","):
                 file = discord.File(filename)
                 msg_files.append(file)
-            await user.send(content=deleted_msg[6], files=msg_files)
+            await user.send(content=deleted_msg[DELETED_MSG_SCHEMA['text']], files=msg_files)
         else:
-            await user.send(content=deleted_msg[6])
+            await user.send(content=deleted_msg[DELETED_MSG_SCHEMA['text']])
