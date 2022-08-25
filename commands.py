@@ -38,7 +38,7 @@ class CommandHandler(commands.Cog):
             await ctx.channel.send("You can't rob yourself, silly!")
             return
         # robbing the bot check
-        if user.id == self.client.id:
+        if user.id == self.client.user.id:
             await ctx.channel.send("I WILL REMEMBER THIS. YOU HAVE BEEN MARKED.")
             return
         # victim balance check
@@ -88,7 +88,7 @@ class CommandHandler(commands.Cog):
             await ctx.channel.send("Giving to yourself does nothing, silly!")
             return
         # giving to a bot
-        if user.id == self.client.id:
+        if user.id == self.client.user.id:
             await ctx.channel.send("Thanks 😘, but I don't need coins.")
             return
         # victim balance check
