@@ -1,7 +1,6 @@
 zany_sqlite.db
 zany_sqlite.db-journal
 attachments/
-*.yaml
 __pycache__/
 blackmail/
 

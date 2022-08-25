@@ -37,7 +37,7 @@ def main():
     db_connection = None
     config_options = None
 
-    with open("zany_config.yaml", "r") as yamlfile:
+    with open("config.yaml", "r") as yamlfile:
         data = yaml.load(yamlfile, Loader=yaml.FullLoader)
         config_options = data
         db_connection = create_connection(data['sqlite_dir'])
