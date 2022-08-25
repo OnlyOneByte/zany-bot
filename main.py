@@ -2,9 +2,9 @@
 import yaml
 import asyncio
 from discord.ext import commands
-from events import EventHandler
-from commands import CommandHandler
-from db import create_connection
+from src.events import EventHandler
+from src.commands import CommandHandler
+from src.db import create_connection
 
 async def coin_interval(client, conn, economyOptions, zany_channel):
     await client.wait_until_ready()
