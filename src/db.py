@@ -6,14 +6,16 @@ DELETED_MSG_COLS = [
     'time',
     'react_message_id',
     'guild_id',
+    'guild_name',
     'channel_id',
-    'user_name',
+    'channel_name',
     'user_id',
+    'user_name',
     'text',
     'attachments',
     'unlock_times'
     ]
-DELETED_MSG_SCHEMA = {DELETED_MSG_COLS[i] : i for i in range(0, len(DELETED_MSG_COLS))}
+DM_SCHEMA = {DELETED_MSG_COLS[i] : i for i in range(0, len(DELETED_MSG_COLS))}
 
 
 
@@ -23,7 +25,7 @@ def get_deleted_message(conn, reaction_id):
 
 
 def add_deleted(conn, task):
-    sql = f'INSERT INTO deleted_messages({",".join(DELETED_MSG_COLS)}) VALUES(?,?,?,?,?,?,?,?,?)'
+    sql = f'INSERT INTO deleted_messages({",".join(DELETED_MSG_COLS)}) VALUES({",".join(["?"] * len(DELETED_MSG_COLS))})'
     cur = conn.cursor()
     cur.execute(sql, task)
     conn.commit()
@@ -47,9 +49,15 @@ def check_user_bank(conn, user: User, cost: int, economyOptions):
     user_coins = int(userRow[0]) if userRow else int(economyOptions['starting_amount'])
     if user_coins >= cost:
         conn.execute("UPDATE users SET banked_zanycoins=? WHERE user_id=?", (int(userRow[0])-cost, user.id))
+        conn.commit()
         return True
     return False
-    
+
+def increment_unlock_times(conn, react_message_id, author_id):
+    conn.execute("UPDATE deleted_messages SET unlock_times=unlock_times+? WHERE react_message_id=?", (1,react_message_id))
+    conn.execute("UPDATE users SET banked_zanycoins=banked_zanycoins+? WHERE user_id=?", (1, author_id))
+    conn.commit()
+
     
 def create_connection(path):
     connection = None
@@ -64,7 +72,7 @@ def create_connection(path):
 
     if connection.execute("SELECT name FROM sqlite_master WHERE name='users'").fetchone() is None:
         connection.execute("CREATE TABLE users(user_id,user_name,banked_zanycoins,robs_used)")
-    
+    connection.commit()
     return connection
 
 

@@ -2,7 +2,7 @@ import discord
 from datetime import datetime
 from discord import User, Reaction, Message
 from discord.ext import commands
-from .db import add_deleted, check_user_bank, get_deleted_message, DELETED_MSG_SCHEMA
+from .db import add_deleted, check_user_bank, get_deleted_message, DM_SCHEMA, increment_unlock_times
 
 class EventHandler(commands.Cog):
     def __init__(self, client, db_con, config):
@@ -28,13 +28,15 @@ class EventHandler(commands.Cog):
                 attachment_filenames.append(filename)
 
             zany_chan = await self.client.fetch_channel(self.config['zany_channel'])
-            reacc_message = await zany_chan.send(f"======\nA Message was deleted in:\n  -{message.guild.name }\n  -{message.channel.name}\n  -**{message.author.name}**\nReact to this message to get a DM with the deleted message!")
+            react_message = await zany_chan.send(f"======\nA Message was deleted in:\n  -{message.guild.name }\n  -{message.channel.name}\n  -**{message.author.name}**\n  -*Cost: {1}*\nReact to this message to get a DM with the deleted message!")
 
             task = (
                 str(datetime.now()),
-                reacc_message.id,
+                react_message.id,
                 message.guild.id,
+                message.guild.name,
                 message.channel.id,
+                message.channel.name,
                 message.author.name,
                 message.author.id,
                 message.content,
@@ -68,18 +70,20 @@ class EventHandler(commands.Cog):
 
         # Do economy if we want it
         if self.config['economy_enable']:
-            if not check_user_bank(self.db_con, user, deleted_msg[DELETED_MSG_SCHEMA['unlock_times']], self.config['economy']):
+            if not check_user_bank(self.db_con, user, (deleted_msg[DM_SCHEMA['unlock_times']] +1), self.config['economy']):
                 await user.send(f"You do not have enough {self.config['economy']['currency_name']}s! Please wait!")
                 return
-            
+            else:
+                increment_unlock_times(self.db_con, deleted_msg[DM_SCHEMA['react_message_id']],deleted_msg[DM_SCHEMA['user_id']])
+                await reaction.message.edit(f"======\nA Message was deleted in:\n  -{deleted_msg[DM_SCHEMA['guild_name']]}\n  -{deleted_msg[DM_SCHEMA['channel_name']]}\n  -**{deleted_msg[DM_SCHEMA['user_name']]}**\n  -*Cost: {str(deleted_msg[DM_SCHEMA['unlock_times']]+1)}*\nReact to this message to get a DM with the deleted message!")
 
         # The magic that happens, showing the user the deleted message
         await user.send("|==== Message by: " + deleted_msg[4] + " ====|")
-        if deleted_msg[DELETED_MSG_SCHEMA['attachments']]:
+        if deleted_msg[DM_SCHEMA['attachments']]:
             msg_files = []
-            for filename in deleted_msg[deleted_msg[DELETED_MSG_SCHEMA['attachments']]].split(","):
+            for filename in deleted_msg[deleted_msg[DM_SCHEMA['attachments']]].split(","):
                 file = discord.File(filename)
                 msg_files.append(file)
-            await user.send(content=deleted_msg[DELETED_MSG_SCHEMA['text']], files=msg_files)
+            await user.send(content=deleted_msg[DM_SCHEMA['text']], files=msg_files)
         else:
-            await user.send(content=deleted_msg[DELETED_MSG_SCHEMA['text']])
+            await user.send(content=deleted_msg[DM_SCHEMA['text']])
