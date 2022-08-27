@@ -3,7 +3,7 @@ token: ${BOT_TOKEN}
 zany_channel: ${ZANY_CHANNEL}
 debug: 1
 blacklist_user: true   # blacklists user from seeing it
-command_prefix: "<>"
+command_prefix: ${COMMAND_PREFIX}
 
 
 # economy items
@@ -11,7 +11,7 @@ economy_enable: true
 
 economy:
     # currency and gain option
-    currency_name: "Zany Coin"
+    currency_name: ${CURRENCY_NAME}
     max_bank: 500
     earn_interval: 720      # time in minutes
     per_interval_gain: 12   # how many unlocks gained per interval
