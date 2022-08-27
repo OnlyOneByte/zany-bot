@@ -123,10 +123,5 @@ class CommandHandler(commands.Cog):
         else:
             time.sleep(self.config['economy']['delete_timer'])
             await ctx.message.delete()
-
-
-    @commands.command(aliases=['l', 'lb', 'leader'])
-    async def leaderboard(self, ctx: commands.Context, *args):
-        
         
 
