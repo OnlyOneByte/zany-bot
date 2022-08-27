@@ -70,12 +70,12 @@ class EventHandler(commands.Cog):
 
         # Do economy if we want it
         if self.config['economy_enable']:
-            if not check_user_bank(self.db_con, user, (deleted_msg[DM_SCHEMA['unlock_times']] +1), self.config['economy']):
+            cost = 2**(deleted_msg[DM_SCHEMA['unlock_times']] +1)
+            if not check_user_bank(self.db_con, user, cost, self.config['economy']):
                 await user.send(f"You do not have enough {self.config['economy']['currency_name']}s! Please wait!")
                 return
             else:
                 increment_unlock_times(self.db_con, deleted_msg[DM_SCHEMA['react_message_id']],deleted_msg[DM_SCHEMA['user_id']])
-                cost = (deleted_msg[DM_SCHEMA['unlock_times']]+1) + 1
                 await reaction.message.edit(content=f"======\nA Message was deleted in:\n  -{deleted_msg[DM_SCHEMA['guild_name']]}\n  -{deleted_msg[DM_SCHEMA['channel_name']]}\n  -**{deleted_msg[DM_SCHEMA['user_name']]}**\n  -*Cost: {cost}*\nReact to this message to get a DM with the deleted message!")
 
         # The magic that happens, showing the user the deleted message

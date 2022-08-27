@@ -46,7 +46,7 @@ class CommandHandler(commands.Cog):
         if balance_victim == None:
             add_user(self.db_con, (user.id,user.name,int(self.config['economy']['starting_amount']), 0))
             balance_victim = [int(self.config['economy']['starting_amount'])]
-        if not balance_victim[0] > 0:
+        if not int(balance_victim[0]) > 0:
             await ctx.channel.send("You are trying to rob someone with 0 coins you sicko.")
             return
         # robber rob usage check
@@ -54,14 +54,14 @@ class CommandHandler(commands.Cog):
         if balance_robber== None:
             add_user(self.db_con, (ctx.author.id,ctx.author.name,int(self.config['economy']['starting_amount']), 0))
             balance_robber = [int(self.config['economy']['starting_amount']), 0]
-        if not balance_robber[1] < int(self.config['economy']['robs_per_interval']):
+        if not int(balance_robber[1]) < int(self.config['economy']['robs_per_interval']):
             await ctx.channel.send("You have no more robs left. Please wait for your robs to reset.")
             return
         
         # WE ROBBED THEM BITCHES
-        max_rob = balance_victim[0] if balance_victim[0] < self.config['economy']['max_rob'] else self.config['economy']['max_rob']
+        max_rob = int(balance_victim[0]) if balance_victim[0] < self.config['economy']['rob_max'] else self.config['economy']['rob_max']
         rob_amount = random.randint(0, max_rob)
-        new_bal = balance_robber[0]+rob_amount if balance_robber[0]+rob_amount < self.config['economy']['max_bank'] else self.config['economy']['max_bank']
+        new_bal = int(balance_robber[0])+rob_amount if int(balance_robber)[0]+rob_amount < self.config['economy']['max_bank'] else self.config['economy']['max_bank']
 
         self.db_con.execute("UPDATE users SET banked_zanycoins=?, robs_used=robs_used+1 WHERE user_id=?", (new_bal, ctx.author.id))
         self.db_con.execute("UPDATE users SET banked_zanycoins=banked_zanycoins-? WHERE user_id=?" , (rob_amount, user.id))
