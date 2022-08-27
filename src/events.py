@@ -12,6 +12,8 @@ class EventHandler(commands.Cog):
 
     @commands.Cog.listener()
     async def on_ready(self):
+        zany_chan = await self.client.fetch_channel(self.config['zany_channel'])
+        await zany_chan.send("Hello! I just started up!")
         print("Bot Started!")
 
     @commands.Cog.listener()
