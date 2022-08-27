@@ -1,7 +1,8 @@
 import discord
 import random
+import time
 from discord.ext import commands
-from .db import add_user
+from .db import add_user, check_user_bank
 
 class CommandHandler(commands.Cog):
     def __init__(self, client, db_con, config):
@@ -61,7 +62,7 @@ class CommandHandler(commands.Cog):
         # WE ROBBED THEM BITCHES
         max_rob = int(balance_victim[0]) if balance_victim[0] < self.config['economy']['rob_max'] else self.config['economy']['rob_max']
         rob_amount = random.randint(0, max_rob)
-        new_bal = int(balance_robber[0])+rob_amount if int(balance_robber)[0]+rob_amount < self.config['economy']['max_bank'] else self.config['economy']['max_bank']
+        new_bal = int(balance_robber[0])+rob_amount if int(balance_robber[0])+rob_amount < self.config['economy']['max_bank'] else self.config['economy']['max_bank']
 
         self.db_con.execute("UPDATE users SET banked_zanycoins=?, robs_used=robs_used+1 WHERE user_id=?", (new_bal, ctx.author.id))
         self.db_con.execute("UPDATE users SET banked_zanycoins=banked_zanycoins-? WHERE user_id=?" , (rob_amount, user.id))
@@ -113,3 +114,15 @@ class CommandHandler(commands.Cog):
         self.db_con.execute("UPDATE users SET banked_zanycoins=banked_zanycoins+? WHERE user_id=?" , (amount, user.id))
 
         await ctx.channel.send(f"<@{ctx.author.id}> has given <@{user.id}> {amount}. <@{ctx.author.id}> has {str(int(balance_sender[0])-amount)} {self.config['economy']['currency_name']}s, and <@{user.id}> has {str(int(balance_receiver[0])+amount)} {self.config['economy']['currency_name']}s")
+
+
+    @commands.command(aliases=['d', 'del'])
+    async def delete(self, ctx: commands.Context, *args):
+        if not check_user_bank(self.db_con, ctx.author, self.config['economy']['delete_cost'], self.config['economy']):
+            await ctx.channel.send(f"You don't have enough {self.config['economy']['currency_name']}s to use autodelete!")
+        else:
+            time.sleep(self.config['economy']['delete_timer'])
+            await ctx.message.delete()
+
+        
+
