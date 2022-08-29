@@ -22,17 +22,20 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
+      - name: stop old zany bot service
+        run: sudo systemctl stop zany-bot.service
+
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - name: checkout repo
         uses: actions/checkout@v3
-      - name: setup python & install reqs
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.6.9'
-          cache: 'pipenv'
+
+      - name: Install requirements
         run: pipenv install
+
       - name: make attachments folder
         run: mkdir attachments/
-      - name: startup app
-        run: pipenv run app
 
+      - name: start new zany bot service
+        run: sudo systemctl start zany-bot.service
+
+      
