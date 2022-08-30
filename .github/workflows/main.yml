@@ -17,6 +17,9 @@ on:
 jobs:
   # This workflow contains a single job called "build"
   build:
+    env:
+      GITHUB_WORKSPACE: ${{GITHUB_WORKSPACE}}/zany-bot
+
     environment: prod-env
     # The type of runner that the job will run on
     runs-on: self-hosted
@@ -31,9 +34,8 @@ jobs:
         uses: actions/checkout@v3
         with:
           ref: main
-          path: zany-bot
 
-          
+
       - name: Set runner-specific environment variables
         shell: bash
         run: |
