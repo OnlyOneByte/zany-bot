@@ -25,7 +25,7 @@ class EventHandler(commands.Cog):
 
             attachment_filenames = []
             for attachment in message.attachments:
-                filename = 'attachments/'+str(attachment.id)+"."+attachment.filename.split(".")[-1]
+                filename = self.config['attachments_dir']+str(attachment.id)+"."+attachment.filename.split(".")[-1]
                 await attachment.save(filename)
                 attachment_filenames.append(filename)
 

@@ -11,7 +11,7 @@ from src.commands import CommandHandler
 from src.db import create_connection
 from dotenv import load_dotenv
 
-load_dotenv()
+load_dotenv('bot.env')
 
 async def coin_interval(client, conn, economyOptions, zany_channel):
     await client.wait_until_ready()

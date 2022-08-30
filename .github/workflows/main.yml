@@ -37,10 +37,6 @@ jobs:
         run: |
           rm -rf .env
           printf '%s\n' 'BOT_TOKEN=${{secrets.BOT_TOKEN}}' 'ZANY_CHANNEL=${{secrets.ZANY_CHANNEL}}' 'COMMAND_PREFIX=${{secrets.COMMAND_PREFIX}}' 'CURRENCY_NAME=${{secrets.CURRENCY_NAME}}' > bot.env
-          printf '%s\n' 'BOT_TOKEN=${{secrets.BOT_TOKEN}}' 'ZANY_CHANNEL=${{secrets.ZANY_CHANNEL}}' 'COMMAND_PREFIX=${{secrets.COMMAND_PREFIX}}' 'CURRENCY_NAME=${{secrets.CURRENCY_NAME}}' > 121.en
-
-      - name: make attachments folder
-        run: mkdir attachments/
 
       - name: start new zany bot service
         run: sudo systemctl start zany-bot.service

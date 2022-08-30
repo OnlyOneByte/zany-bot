@@ -1,4 +1,5 @@
-sqlite_dir: 'zany_sqlite.db'
+sqlite_dir: '/home/angelo/zany_sqlite.db'
+attachments_dir: '/home/angelo/attachments/'
 token: ${BOT_TOKEN}
 zany_channel: ${ZANY_CHANNEL}
 debug: 1
