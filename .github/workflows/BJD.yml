@@ -1,6 +1,6 @@
 # This is a basic workflow to help you get started with Actions
 
-name: CI
+name: BJD
 
 # Controls when the workflow will run
 on:
@@ -10,8 +10,6 @@ on:
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
-
-
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -23,12 +21,15 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      - name: stop old zany bot service
-        run: sudo systemctl stop zany-bot.service
+      - name: stop old daddy bot service
+        run: sudo systemctl stop daddy-bot.service
 
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - name: checkout repo
         uses: actions/checkout@v3
+        with:
+          ref: dev
+          path: daddy-bot
 
       - name: Set runner-specific environment variables
         shell: bash
@@ -36,7 +37,7 @@ jobs:
           rm -rf .env
           printf '%s\n' 'BOT_TOKEN=${{secrets.BOT_TOKEN}}' 'ZANY_CHANNEL=${{secrets.ZANY_CHANNEL}}' 'COMMAND_PREFIX=${{secrets.COMMAND_PREFIX}}' 'ATTACHMENTS_DIR=${{secrets.ATTACHMENTS_DIR}}' 'CURRENCY_NAME=${{secrets.CURRENCY_NAME}}' 'SQLITE_DIR=${{secrets.SQLITE_DIR}}' > bot.env
 
-      - name: start new zany bot service
-        run: sudo systemctl start zany-bot.service
+      - name: start new daddy bot service
+        run: sudo systemctl start daddy-bot.service
 
       
