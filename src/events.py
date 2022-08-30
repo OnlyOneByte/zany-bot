@@ -77,7 +77,7 @@ class EventHandler(commands.Cog):
                 await user.send(f"You do not have enough {self.config['economy']['currency_name']}s! Please wait!")
                 return
             else:
-                increment_unlock_times(self.db_con, deleted_msg[DM_SCHEMA['react_message_id']],deleted_msg[DM_SCHEMA['user_id']])
+                increment_unlock_times(self.db_con, deleted_msg[DM_SCHEMA['react_message_id']],deleted_msg[DM_SCHEMA['user_id']], int(cost/2))
                 await reaction.message.edit(content=f"======\nA Message was deleted in:\n  -{deleted_msg[DM_SCHEMA['guild_name']]}\n  -{deleted_msg[DM_SCHEMA['channel_name']]}\n  -**{deleted_msg[DM_SCHEMA['user_name']]}**\n  -*Cost: {cost}*\nReact to this message to get a DM with the deleted message!")
 
         # The magic that happens, showing the user the deleted message

@@ -53,7 +53,7 @@ def check_user_bank(conn, user: User, cost: int, economyOptions):
         return True
     return False
 
-def increment_unlock_times(conn, react_message_id, author_id):
+def increment_unlock_times(conn, react_message_id, author_id, gained):
     conn.execute("UPDATE deleted_messages SET unlock_times=unlock_times+? WHERE react_message_id=?", (1,react_message_id))
     conn.execute("UPDATE users SET banked_zanycoins=banked_zanycoins+? WHERE user_id=?", (1, author_id))
     conn.commit()
