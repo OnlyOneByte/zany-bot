@@ -10,6 +10,7 @@ from src.events import EventHandler
 from src.commands import CommandHandler
 from src.db import create_connection
 from dotenv import load_dotenv
+
 load_dotenv()
 
 async def coin_interval(client, conn, economyOptions, zany_channel):

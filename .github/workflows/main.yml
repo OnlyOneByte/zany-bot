@@ -36,9 +36,8 @@ jobs:
         shell: bash
         run: |
           rm -rf .env
-          echo $"BOT_TOKEN=${{secrets.BOT_TOKEN}}\nZANY_CHANNEL=${{secrets.ZANY_CHANNEL}}\nCOMMAND_PREFIX=${{secrets.COMMAND_PREFIX}}\nCURRENCY_NAME=${{secrets.CURRENCY_NAME}}" > .env
-          echo $"BOT_TOKEN=${{secrets.BOT_TOKEN}}\nZANY_CHANNEL=${{secrets.ZANY_CHANNEL}}\nCOMMAND_PREFIX=${{secrets.COMMAND_PREFIX}}\nCURRENCY_NAME=${{secrets.CURRENCY_NAME}}" > 111.en
-          echo "test" > test.txt
+          printf '%s\n' 'BOT_TOKEN=${{secrets.BOT_TOKEN}}' 'ZANY_CHANNEL=${{secrets.ZANY_CHANNEL}}' 'COMMAND_PREFIX=${{secrets.COMMAND_PREFIX}}' 'CURRENCY_NAME=${{secrets.CURRENCY_NAME}}' > bot.env
+          printf '%s\n' 'BOT_TOKEN=${{secrets.BOT_TOKEN}}' 'ZANY_CHANNEL=${{secrets.ZANY_CHANNEL}}' 'COMMAND_PREFIX=${{secrets.COMMAND_PREFIX}}' 'CURRENCY_NAME=${{secrets.CURRENCY_NAME}}' > 121.en
 
       - name: make attachments folder
         run: mkdir attachments/
