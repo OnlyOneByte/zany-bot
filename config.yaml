@@ -25,5 +25,5 @@ economy:
     robs_per_interval: 10   # how many robs per interval
 
     # Authodelete cost
-    delete_cost: 1          # cost of delete
+    delete_cost: 10         # cost of delete
     delete_timer: 0.3       # how many seconds to wait before deleting
