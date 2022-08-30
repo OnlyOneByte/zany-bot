@@ -38,7 +38,7 @@ class AdminCommandHandler(commands.Cog):
         if balance_receiver[0] + amount > int(self.config['economy']['max_bank']):
             await ctx.channel.send("The reciever would not be able to receive that many!")
             return
-        self.db_con.execute("UPDATE users SET banked_zanycoins=banked_zanycoins+? WHERE user_id=?" , (amount, user.id))
+        self.db_con.execute("UPDATE users SET banked_zanycoins=? WHERE user_id=?" , (amount, user.id))
 
         f"<@{user.id}>'s balance has been set at {amount}"
 

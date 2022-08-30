@@ -16,7 +16,7 @@ load_dotenv('bot.env')
 
 async def coin_interval(client, conn, economyOptions, zany_channel):
     await client.wait_until_ready()
-    print("Starting up background task: Economy Earn Interval Tiemr")
+    print("Starting up background task: Economy Earn Interval Timer")
     zany_chan = await client.fetch_channel(zany_channel)
 
     # main background loop
