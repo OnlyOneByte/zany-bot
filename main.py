@@ -8,6 +8,7 @@ from yaml import SafeLoader
 from discord.ext import commands
 from src.events import EventHandler
 from src.commands import CommandHandler
+from src.admin import AdminCommandHandler
 from src.db import create_connection
 from dotenv import load_dotenv
 
@@ -15,13 +16,13 @@ load_dotenv('bot.env')
 
 async def coin_interval(client, conn, economyOptions, zany_channel):
     await client.wait_until_ready()
-    print("Starting up background task: Economy Earn Interval Tiemr")
+    print("Starting up background task: Economy Earn Interval Timer")
     zany_chan = await client.fetch_channel(zany_channel)
 
     # main background loop
     while True:
         await asyncio.sleep(economyOptions['earn_interval']*60)
-        await zany_chan.send(f"Everyone is getting paid! You have new {economyOptions['currency_name']}s!")
+        # await zany_chan.send(f"Everyone is getting paid! You have new {economyOptions['currency_name']}s!")
         conn.execute("UPDATE users SET banked_zanycoins=banked_zanycoins+?", (economyOptions['per_interval_gain'],))
         conn.execute("UPDATE users SET banked_zanycoins=? WHERE banked_zanycoins>?", (economyOptions['max_bank'], economyOptions['max_bank']))
         
@@ -34,7 +35,7 @@ async def rob_interval(client, conn, economyOptions, zany_channel):
     # main background loop
     while True:
         await asyncio.sleep(economyOptions['rob_interval']*60)
-        await zany_chan.send("LET THE HUNT BEGIN! ROBS RESET!")
+        # await zany_chan.send("LET THE HUNT BEGIN! ROBS RESET!")
         conn.execute("UPDATE users SET robs_used=0")
         
 
@@ -68,6 +69,7 @@ def main():
     
     client.add_cog(EventHandler(client, db_connection, config_options)) # Registers event handlers
     client.add_cog(CommandHandler(client, db_connection, config_options)) # Registers command handlers
+    client.add_cog(AdminCommandHandler(client, db_connection, config_options)) # Registers command handlers
     client.run(config_options['token'])
 
 if __name__ == "__main__":

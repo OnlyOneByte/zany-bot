@@ -115,7 +115,6 @@ class CommandHandler(commands.Cog):
 
         await ctx.channel.send(f"<@{ctx.author.id}> has given <@{user.id}> {amount}. <@{ctx.author.id}> has {str(int(balance_sender[0])-amount)} {self.config['economy']['currency_name']}s, and <@{user.id}> has {str(int(balance_receiver[0])+amount)} {self.config['economy']['currency_name']}s")
 
-
     @commands.command(aliases=['d', 'del'])
     async def delete(self, ctx: commands.Context, *args):
         if not check_user_bank(self.db_con, ctx.author, self.config['economy']['delete_cost'], self.config['economy']):
