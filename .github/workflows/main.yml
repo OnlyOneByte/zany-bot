@@ -29,6 +29,9 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - name: checkout repo
         uses: actions/checkout@v3
+        with:
+          path: daddy-bot
+          ref: dev
 
       - name: Set runner-specific environment variables
         shell: bash
