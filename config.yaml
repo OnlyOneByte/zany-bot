@@ -19,10 +19,10 @@ economy:
     starting_amount: 500    # how much do you start with
 
     # rob settings
-    rob_enabled: true       # can players rob
+rob_enabled: true           # can players rob
     rob_interval: 60        # rob interval in minutes
     rob_max: 100000         # max rob amount
-    robs_per_interval: 5   # how many robs per interval
+    robs_per_interval: 5    # how many robs per interval
 
     # Authodelete cost
     delete_cost: 10         # cost of delete
