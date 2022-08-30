@@ -23,8 +23,8 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      - name: stop old zany bot service
-        run: sudo systemctl stop zany-bot.service
+      - name: stop old daddy bot service
+        run: sudo systemctl stop daddy-bot.service
 
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - name: checkout repo
@@ -36,7 +36,7 @@ jobs:
           rm -rf .env
           printf '%s\n' 'BOT_TOKEN=${{secrets.BOT_TOKEN}}' 'ZANY_CHANNEL=${{secrets.ZANY_CHANNEL}}' 'COMMAND_PREFIX=${{secrets.COMMAND_PREFIX}}' 'ATTACHMENTS_DIR=${{secrets.ATTACHMENTS_DIR}}' 'CURRENCY_NAME=${{secrets.CURRENCY_NAME}}' 'SQLITE_DIR=${{secrets.SQLITE_DIR}}' > bot.env
 
-      - name: start new zany bot service
-        run: sudo systemctl start zany-bot.service
+      - name: start new daddy bot service
+        run: sudo systemctl start daddy-bot.service
 
       
