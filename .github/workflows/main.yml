@@ -18,7 +18,7 @@ jobs:
   # This workflow contains a single job called "build"
   build:
     env:
-      GITHUB_WORKSPACE: ${{GITHUB_WORKSPACE}}/zany-bot
+      GITHUB_WORKSPACE: ${{github.workspace}}/zany-bot
 
     environment: prod-env
     # The type of runner that the job will run on

@@ -16,7 +16,7 @@ jobs:
   # This workflow contains a single job called "build"
   build:
     env:
-      GITHUB_WORKSPACE: ${{GITHUB_WORKSPACE}}/daddy-bot
+      GITHUB_WORKSPACE: ${{github.workspace}}/daddy-bot
     environment: dev-env
     # The type of runner that the job will run on
     runs-on: self-hosted
