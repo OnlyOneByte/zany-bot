@@ -8,6 +8,7 @@ from yaml import SafeLoader
 from discord.ext import commands
 from src.events import EventHandler
 from src.commands import CommandHandler
+from src.admin import AdminCommandHandler
 from src.db import create_connection
 from dotenv import load_dotenv
 
@@ -68,6 +69,7 @@ def main():
     
     client.add_cog(EventHandler(client, db_connection, config_options)) # Registers event handlers
     client.add_cog(CommandHandler(client, db_connection, config_options)) # Registers command handlers
+    client.add_cog(AdminCommandHandler(client, db_connection, config_options)) # Registers command handlers
     client.run(config_options['token'])
 
 if __name__ == "__main__":
