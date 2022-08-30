@@ -17,9 +17,6 @@ on:
 jobs:
   # This workflow contains a single job called "build"
   build:
-    env:
-      GITHUB_WORKSPACE: ${{github.workspace}}/zany-bot
-
     environment: prod-env
     # The type of runner that the job will run on
     runs-on: self-hosted
@@ -34,13 +31,13 @@ jobs:
         uses: actions/checkout@v3
         with:
           ref: main
+          path: zany-bot
 
 
       - name: Set runner-specific environment variables
         shell: bash
         run: |
-          rm -rf .env
-          printf '%s\n' 'BOT_TOKEN=${{secrets.BOT_TOKEN}}' 'ZANY_CHANNEL=${{secrets.ZANY_CHANNEL}}' 'COMMAND_PREFIX=${{secrets.COMMAND_PREFIX}}' 'ATTACHMENTS_DIR=${{secrets.ATTACHMENTS_DIR}}' 'CURRENCY_NAME=${{secrets.CURRENCY_NAME}}' 'SQLITE_DIR=${{secrets.SQLITE_DIR}}' > zany-bot/bot.env
+          printf '%s\n' 'BOT_TOKEN=${{secrets.BOT_TOKEN}}' 'ZANY_CHANNEL=${{secrets.ZANY_CHANNEL}}' 'COMMAND_PREFIX=${{secrets.COMMAND_PREFIX}}' 'ATTACHMENTS_DIR=${{secrets.ATTACHMENTS_DIR}}' 'CURRENCY_NAME=${{secrets.CURRENCY_NAME}}' 'SQLITE_DIR=${{secrets.SQLITE_DIR}}' > ${{github.workspace}}/zany-bot/bot.env
 
       - name: start new zany bot service
         run: sudo systemctl start zany-bot.service
