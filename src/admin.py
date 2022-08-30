@@ -40,6 +40,6 @@ class AdminCommandHandler(commands.Cog):
             return
         self.db_con.execute("UPDATE users SET banked_zanycoins=? WHERE user_id=?" , (amount, user.id))
 
-        f"<@{user.id}>'s balance has been set at {amount}"
+        await ctx.channel.send(f"{user.name}'s balance has been set at {amount}")
 
 
