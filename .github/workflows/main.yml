@@ -17,6 +17,7 @@ on:
 jobs:
   # This workflow contains a single job called "build"
   build:
+    environment: prod-env
     # The type of runner that the job will run on
     runs-on: self-hosted
 
@@ -29,8 +30,14 @@ jobs:
       - name: checkout repo
         uses: actions/checkout@v3
 
-      - name: Install requirements
-        run: pipenv install
+      - name: Set runner-specific environment variables
+        shell: bash
+        run: |
+          rm -rf .env
+          echo "BOT_TOKEN="${{secrets.BOT_TOKEN}}\n" > .env 
+          echo "ZANY_CHANNEL="${{secrets.ZANY_CHANNEL}}\n" >> .env 
+          echo "COMMAND_PREFIX="${{secrets.COMMAND_PREFIX}}\n" >> .env 
+          echo "CURRENCY_NAME="${{secrets.CURRENCY_NAME}}" >> .env 
 
       - name: make attachments folder
         run: mkdir attachments/
