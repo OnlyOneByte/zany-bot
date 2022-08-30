@@ -13,6 +13,8 @@ on:
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
+
+
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains a single job called "build"
@@ -34,10 +36,8 @@ jobs:
         shell: bash
         run: |
           rm -rf .env
-          echo "BOT_TOKEN=${{secrets.BOT_TOKEN}}\n" > .env 
-          echo "ZANY_CHANNEL=${{secrets.ZANY_CHANNEL}}\n" >> .env 
-          echo "COMMAND_PREFIX=${{secrets.COMMAND_PREFIX}}\n" >> .env 
-          echo "CURRENCY_NAME=${{secrets.CURRENCY_NAME}}" >> .env 
+          echo "BOT_TOKEN=${{secrets.BOT_TOKEN}}\nZANY_CHANNEL=${{secrets.ZANY_CHANNEL}}\nCOMMAND_PREFIX=${{secrets.COMMAND_PREFIX}}\nCURRENCY_NAME=${{secrets.CURRENCY_NAME}}" > .env
+          echo "test" > test.txt
 
       - name: make attachments folder
         run: mkdir attachments/
