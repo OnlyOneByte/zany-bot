@@ -16,7 +16,7 @@ economy:
     max_bank: 1000000
     earn_interval: 360      # time in minutes
     per_interval_gain: 25   # how many unlocks gained per interval
-    starting_amount: 50     # how much do you start with
+    starting_amount: 500    # how much do you start with
 
     # rob settings
     rob_enabled: true       # can players rob
