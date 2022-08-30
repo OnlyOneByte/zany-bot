@@ -12,6 +12,9 @@ class AdminCommandHandler(commands.Cog):
 
     @commands.command(aliases=['as'])
     async def admin_set(self, ctx: commands.Context, user: discord.User=None, amount: int=None):
+        if not ctx.author.id in [132209994165649408]:
+            await ctx.channel.send("You are not a discord kitten.")
+            return
         # channel check
         if not ctx.channel.id == int(self.config['zany_channel']):
             await ctx.channel.send("WRONG CHANNEL HOMIE")
