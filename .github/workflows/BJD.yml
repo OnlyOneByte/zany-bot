@@ -34,7 +34,7 @@ jobs:
       - name: Set runner-specific environment variables
         shell: bash
         run: |
-          printf '%s\n' 'BOT_TOKEN=${{secrets.BOT_TOKEN}}' 'ZANY_CHANNEL=${{secrets.ZANY_CHANNEL}}' 'COMMAND_PREFIX=${{secrets.COMMAND_PREFIX}}' 'ATTACHMENTS_DIR=${{secrets.ATTACHMENTS_DIR}}' "CURRENCY_NAME=${{secrets.CURRENCY_NAME}}" 'SQLITE_DIR=${{secrets.SQLITE_DIR}}' > daddy-bot/bot.env
+          printf '%s\n' 'BOT_TOKEN=${{secrets.BOT_TOKEN}}' 'ZANY_CHANNEL=${{secrets.ZANY_CHANNEL}}' 'COMMAND_PREFIX=${{secrets.COMMAND_PREFIX}}' 'ATTACHMENTS_DIR=${{secrets.ATTACHMENTS_DIR}}' "CURRENCY_NAME=${{secrets.CURRENCY_NAME}}" 'SQLITE_DIR=${{secrets.SQLITE_DIR}}' > ${{github.workspace}}daddy-bot/bot.env
 
       - name: start new daddy bot service
         run: sudo systemctl start daddy-bot.service
